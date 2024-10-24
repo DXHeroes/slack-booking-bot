@@ -65,7 +65,7 @@ const getSpotBlocks = (spots: ParkingSpots, date: Moment) => {
   const blocks = [];
 
   if (spots.bookedSpots.length > 0) {
-    blocks.push(buildMyParkingSpotsUI(spots.bookedSpots, date));
+    blocks.push(...buildMyParkingSpotsUI(spots.bookedSpots, date));
   }
 
   if (spots.availableSpots.length === 0) {
