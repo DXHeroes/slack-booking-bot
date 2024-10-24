@@ -1,0 +1,28 @@
+{
+  "name": "slack-app-starter-kit",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "pnpm run build && node ./dist/app.js",
+    "dev": "tsx watch ./app.ts",
+    "lint": "npx @biomejs/biome check --write *.ts listeners",
+    "test": "pnpm run build && pnpm run lint"
+  },
+  "keywords": [],
+  "author": "Prokop Simek <prokop.simek@dxheroes.io>",
+  "license": "MIT",
+  "dependencies": {
+    "@ai-sdk/anthropic": "^0.0.51",
+    "@ai-sdk/openai": "^0.0.66",
+    "@slack/bolt": "^3.22.0",
+    "ai": "^3.4.9",
+    "dotenv": "^16.4.5"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^1.9.3",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.3"
+  }
+}

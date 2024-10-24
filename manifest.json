@@ -1,0 +1,64 @@
+{
+  "display_information": {
+    "name": "DX Heroes Template App",
+    "description": "Note a bout App",
+    "background_color": "#0fabab",
+    "long_description": "Long desc about this app Long desc about this app Long desc about this app Long desc about this app Long desc about this app Long desc about this app Long desc about this app Long desc about this app Long desc about this app"
+  },
+  "features": {
+    "app_home": {
+      "home_tab_enabled": true,
+      "messages_tab_enabled": true,
+      "messages_tab_read_only_enabled": false
+    },
+    "bot_user": {
+      "display_name": "DX Heroes Template App",
+      "always_online": false
+    },
+    "shortcuts": [
+      {
+        "name": "Run sample shortcut",
+        "type": "global",
+        "callback_id": "sample_shortcut_id",
+        "description": "Runs a sample shortcut"
+      }
+    ],
+    "slash_commands": [
+      {
+        "command": "/sample-command",
+        "description": "Runs a sample command",
+        "should_escape": false
+      }
+    ]
+  },
+  "oauth_config": {
+    "redirect_urls": [
+      "https://0e25-185-100-196-2.ngrok-free.app/slack/oauth_redirect"
+    ],
+    "scopes": {
+      "bot": [
+        "channels:read",
+        "channels:history",
+        "users:read",
+        "chat:write",
+        "commands",
+        "app_mentions:read"
+      ]
+    }
+  },
+  "settings": {
+    "event_subscriptions": {
+      "bot_events": [
+        "app_home_opened",
+        "app_mention",
+        "message.channels"
+      ]
+    },
+    "interactivity": {
+      "is_enabled": true
+    },
+    "org_deploy_enabled": false,
+    "socket_mode_enabled": true,
+    "token_rotation_enabled": false
+  }
+}
