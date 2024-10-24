@@ -1,4 +1,7 @@
-import type { AllMiddlewareArgs, SlackEventMiddlewareArgs } from '@slack/bolt';
+import type { AllMiddlewareArgs, Button, SlackEventMiddlewareArgs } from '@slack/bolt';
+import type { Moment } from 'moment';
+import { generateDateRange } from '../../functions/generate-date-range';
+import { generateParkingSpots } from '../../functions/generate-parking-spots';
 
 const appHomeOpenedCallback = async ({
   client,
@@ -10,29 +13,61 @@ const appHomeOpenedCallback = async ({
   try {
     await client.views.publish({
       user_id: event.user,
-      view: {
-        type: 'home',
-        blocks: [
-          {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: `*Welcome home, <@${event.user}> :house:*`,
-            },
-          },
-          {
-            type: 'section',
-            text: {
-              type: 'mrkdwn',
-              text: 'Learn how home tabs can be more useful and interactive <https://api.slack.com/surfaces/tabs/using|*in the documentation*>.',
-            },
-          },
-        ],
-      },
+      // biome-ignore lint/suspicious/noExplicitAny: <explanation>
+      view: await getAppHomeView(event.user) as any
     });
   } catch (error) {
     console.error(error);
+    throw error;
   }
 };
+
+export const getAppHomeView = async (userId: string) => {
+  const dateRange = generateDateRange();
+
+  const spotsForDate = await Promise.all(dateRange.map(async (date) => await generateParkingSpots(date, userId)));
+
+  return {
+    type: 'home',
+    blocks: [
+      {
+        type: 'actions',
+        elements: [
+          {
+            type: 'button',
+            style: 'primary',
+            text: {
+              type: 'plain_text',
+              text: 'Parkers :information_source:',
+              emoji: true,
+            },
+            action_id: 'view_parking_reservations',
+          },
+        ],
+      },
+      ...dateRange.flatMap((date, index) => [
+        {
+          type: 'section',
+          text: {
+            type: 'mrkdwn',
+            text: `*${date.format('dddd')}*`,
+          },
+        },
+        spotsForDate[index].length > 0
+          ? {
+              type: 'actions',
+              elements: spotsForDate[index],
+            }
+          : {
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: 'No spots available',
+              },
+            },
+      ]),
+    ],
+  }
+}
 
 export default appHomeOpenedCallback;
