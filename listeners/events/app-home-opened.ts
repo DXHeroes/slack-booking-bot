@@ -1,7 +1,9 @@
 import type { AllMiddlewareArgs, Button, SlackEventMiddlewareArgs } from '@slack/bolt';
 import type { Moment } from 'moment';
+import { buildFreeParkingSpotsUI } from '../../functions/build-free-parking-spots-ui';
+import { buildMyParkingSpotsUI } from '../../functions/build-my-parking-spots-ui';
 import { generateDateRange } from '../../functions/generate-date-range';
-import { generateParkingSpots } from '../../functions/generate-parking-spots';
+import { type ParkingSpots, generateParkingSpots } from '../../functions/generate-parking-spots';
 
 const appHomeOpenedCallback = async ({
   client,
@@ -53,21 +55,33 @@ export const getAppHomeView = async (userId: string) => {
             text: `*${date.format('dddd')}*`,
           },
         },
-        spotsForDate[index].length > 0
-          ? {
-              type: 'actions',
-              elements: spotsForDate[index],
-            }
-          : {
-              type: 'section',
-              text: {
-                type: 'mrkdwn',
-                text: 'No spots available',
-              },
-            },
+        ...getSpotBlocks(spotsForDate[index], date),
       ]),
     ],
   }
+}
+
+const getSpotBlocks = (spots: ParkingSpots, date: Moment) => {
+  const blocks = [];
+
+  if (spots.bookedSpots.length > 0) {
+    blocks.push(buildMyParkingSpotsUI(spots.bookedSpots, date));
+  }
+
+  if (spots.availableSpots.length === 0) {
+    blocks.push({
+      type: 'section',  
+      text: {
+        type: 'mrkdwn',
+        text: 'No spots available',
+      },
+    });
+  } else {
+    blocks.push(buildFreeParkingSpotsUI(spots.availableSpots, date))
+  }
+
+  console.log("blocks.length", blocks.length)
+  return blocks;
 }
 
 export default appHomeOpenedCallback;

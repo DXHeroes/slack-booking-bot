@@ -1,7 +1,6 @@
 import type { AllMiddlewareArgs, BlockAction, SlackActionMiddlewareArgs } from '@slack/bolt';
 import { fetchBookingsAtDate } from '../../functions/db-service';
 import { generateDateRange } from '../../functions/generate-date-range';
-import { generateParkingSpots } from '../../functions/generate-parking-spots';
 
 const viewParkingReservationsCallback = async ({
   ack,
@@ -42,12 +41,16 @@ const viewParkingReservationsCallback = async ({
               }
             },
             {
-              type: 'actions',
-              elements: bookedSpotsForDate[index] || []
+              type: 'section',
+              text: {
+                type: 'mrkdwn',
+                text: bookedSpotsForDate[index].length <= 0 ? 'No bookings yet' : bookedSpotsForDate[index].map(s => `${s.spot} > <@${s.userId}>`).sort((a, b) => a.split('>')[0].localeCompare(b.split('>')[0])).join('\n')
+              }
             }
           ];
-        }).filter(block => Array.isArray(block) && block.length > 0) // Remove empty days
-    }
+        })
+
+      }
     });
   } catch (error) {
     console.error(error);
@@ -55,7 +58,4 @@ const viewParkingReservationsCallback = async ({
 };
 
 export default viewParkingReservationsCallback;
-function fetchBookings() {
-    throw new Error('Function not implemented.');
-}
 

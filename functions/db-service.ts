@@ -25,8 +25,7 @@ export const createBooking = async (date: Moment, spot: string, userId: string, 
   
   // validate if a requested spot is still available
   const bookings = await fetchBookingsAtDate(date);
-  console.log(bookings)
-  console.log(spot)
+
   const isBookedByAnotherUser = bookings.some(b => b.spot === spot && b.userId !== userId);
   const isBookedByUser = bookings.some(b => b.spot === spot && b.userId === userId);
 

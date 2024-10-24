@@ -29,7 +29,7 @@ const bookParkingSpotCallback = async ({
     });
 
     await ack();
-} catch (error) {
+  } catch (error) {
     console.error(error);
     // Notify the user of the error
     await client.chat.postMessage({
