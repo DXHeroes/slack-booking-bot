@@ -55,17 +55,17 @@ export const getAppHomeView = async (userId: string) => {
             text: `*${date.format('dddd')}*`,
           },
         },
-        ...getSpotBlocks(spotsForDate[index], date),
+        ...getSpotBlocks(spotsForDate[index], date, userId),
       ]),
     ],
   }
 }
 
-const getSpotBlocks = (spots: ParkingSpots, date: Moment) => {
+const getSpotBlocks = (spots: ParkingSpots, date: Moment, userId: string) => {
   const blocks = [];
 
   if (spots.bookedSpots.length > 0) {
-    blocks.push(...buildMyParkingSpotsUI(spots.bookedSpots, date));
+    blocks.push(...buildMyParkingSpotsUI(spots.bookedSpots, date, userId));
   }
 
   if (spots.availableSpots.length === 0) {
@@ -80,7 +80,6 @@ const getSpotBlocks = (spots: ParkingSpots, date: Moment) => {
     blocks.push(buildFreeParkingSpotsUI(spots.availableSpots, date))
   }
 
-  console.log("blocks.length", blocks.length)
   return blocks;
 }
 

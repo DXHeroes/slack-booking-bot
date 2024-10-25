@@ -44,7 +44,7 @@ const viewParkingReservationsCallback = async ({
               type: 'section',
               text: {
                 type: 'mrkdwn',
-                text: bookedSpotsForDate[index].length <= 0 ? 'No bookings yet' : bookedSpotsForDate[index].map(s => `${s.spot} > <@${s.userId}>`).sort((a, b) => a.split('>')[0].localeCompare(b.split('>')[0])).join('\n')
+                text: bookedSpotsForDate[index].length <= 0 ? 'No bookings yet' : bookedSpotsForDate[index].map(s => `${s.spot} > <@${s.userId}> ${s.note ? `_(${s.note})_` : ''}`).sort((a, b) => a.split('>')[0].localeCompare(b.split('>')[0])).join('\n')
               }
             }
           ];
